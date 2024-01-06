@@ -82,11 +82,12 @@ render() {
   const {images, isLoading, error, isModalOpen, selectedImage } = this.state;
   return (
     <div className={css.Container}>
-      {isLoading && <Loader/>}
+      
       <Searchbar onSubmit={this.handleAddQuery}/>
       {error && <h1>{error}</h1>}
       {images.length > 0 && <ImageGallery images={images} onClick={this.opeModal}/> }
      {images.length> 0 && <Button onClick={this.handleLoadMore}/>}
+     {isLoading && <Loader/>}
      {isModalOpen && <Modal selectedImage={selectedImage} onClick={this.handleOverlayClick}/>}
     </div>
   );
