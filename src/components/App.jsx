@@ -16,6 +16,7 @@ export class App extends Component {
   error: '',
   page: 1,
   query: '',
+ 
   isModalOpen: false,
   selectedImage:'',
   hasMoreImages: false,
@@ -43,7 +44,7 @@ const response =  await getAllImages(page, query);
 this.setState((prev) => ({
   images: (prev.images ? [...prev.images, ...response.hits] : response.hits),
   
-  hasMoreImages: response.hits.length > 0,
+  hasMoreImages: (response.total <= 12 ? false : response.hits.length > 0),
  
 }))
 
