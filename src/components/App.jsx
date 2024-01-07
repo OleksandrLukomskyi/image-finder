@@ -18,6 +18,7 @@ export class App extends Component {
   query: '',
   isModalOpen: false,
   selectedImage:'',
+  hasMoreImages: false,
 
 }
 
@@ -25,7 +26,10 @@ export class App extends Component {
 
  componentDidUpdate(_, prevState){
   if(prevState.page!==this.state.page || this.state.query!== prevState.query){
-    this.getImages()
+   if(this.state.query.trim() !== ''){
+    this.getImages();
+   }
+    
   }
  }
 
@@ -38,6 +42,9 @@ const response =  await getAllImages(page, query);
 
 this.setState((prev) => ({
   images: (prev.images ? [...prev.images, ...response.hits] : response.hits),
+  
+  hasMoreImages: response.hits.length > 0,
+ 
 }))
 
   } catch (error) {
@@ -48,7 +55,9 @@ this.setState((prev) => ({
  }
 
  handleAddQuery = (query) => {
-   this.setState({query: query});
+   this.setState({query: query, page: 1, images: [], 
+   
+   });
  }
 
 handleLoadMore = () => {
@@ -77,16 +86,17 @@ handleOverlayClick = (e) => {
   }
 }
 
+
 render() {
- 
-  const {images, isLoading, error, isModalOpen, selectedImage } = this.state;
+   const {images, isLoading, error, isModalOpen, selectedImage, hasMoreImages} = this.state;
+
   return (
     <div className={css.Container}>
       
       <Searchbar onSubmit={this.handleAddQuery}/>
       {error && <h1>{error}</h1>}
       {images.length > 0 && <ImageGallery images={images} onClick={this.opeModal}/> }
-     {images.length> 0 && <Button onClick={this.handleLoadMore}/>}
+     { hasMoreImages && <Button onClick={this.handleLoadMore}/>}
      {isLoading && <Loader/>}
      {isModalOpen && <Modal selectedImage={selectedImage} onClick={this.handleOverlayClick}/>}
     </div>
